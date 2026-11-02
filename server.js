@@ -310,12 +310,6 @@ app.put('/team', async (req, res) => {
       )) {
         return res.status(400).json({ error: 'Relic ไม่ตรงกับประเภทช่อง หรือช่องตัวละครยังว่าง' });
       }
-      const selectedRelicIds = nextRelics.flatMap(row =>
-        row.filter(Boolean).map(relic => String(relic.id))
-      );
-      if (new Set(selectedRelicIds).size !== selectedRelicIds.length) {
-        return res.status(400).json({ error: 'เลือก Relic ซ้ำในทีมไม่ได้' });
-      }
     } catch (error) {
       relicCatalogPromise = null;
       console.error('ไม่สามารถตรวจสอบ Relic ที่เลือกได้:', error);

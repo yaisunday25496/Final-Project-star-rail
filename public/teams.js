@@ -207,13 +207,13 @@ function renderRelics() {
       const selected = selectedAt !== -1;
       return `
       <button class="relic-card${selected ? ' selected' : ''}" type="button" data-relic-id="${escapeHtml(relic.id)}"
-        draggable="${!selected && !isSaving}" aria-label="${escapeHtml(relic.name)}, ${escapeHtml(relic.set.name)}${selected ? ', ใส่อยู่แล้ว' : ''}"
-        ${selected || isSaving ? 'disabled' : ''}>
+        draggable="${!isSaving}" aria-label="${escapeHtml(relic.name)}, ${escapeHtml(relic.set.name)}${selected ? ', มีในทีมแล้ว เลือกซ้ำได้' : ''}"
+        ${isSaving ? 'disabled' : ''}>
         ${relic.icon ? `<img src="${escapeHtml(relic.icon)}" alt="" loading="lazy">` : ''}
         <span class="relic-info">
           <strong>${escapeHtml(relic.name)}</strong>
           <span>${escapeHtml(relic.set.name)} · ${escapeHtml(relic.type)}</span>
-          <span class="rarity">${'★'.repeat(Math.max(0, Number(relic.stars) || 0))}${selected ? ' · ใส่อยู่แล้ว' : ''}</span>
+          <span class="rarity">${'★'.repeat(Math.max(0, Number(relic.stars) || 0))}${selected ? ' · มีในทีมแล้ว' : ''}</span>
         </span>
       </button>
     `;
@@ -350,17 +350,6 @@ async function chooseRelic(id, teamIndex, relicIndex) {
   }
   if (relic.type !== RELIC_SLOT_TYPES[relicIndex]) {
     showError('Relic ไม่ตรงกับประเภทช่องที่เลือก');
-    return;
-  }
-  const alreadyEquipped = currentRelics.some((row, currentTeamIndex) =>
-    row.some((item, currentRelicIndex) =>
-      item && String(item.id) === String(relic.id) &&
-      (currentTeamIndex !== teamIndex || currentRelicIndex !== relicIndex)
-    )
-  );
-  if (alreadyEquipped) {
-    showError('Relic ชิ้นเดียวกันใส่ซ้ำไม่ได้');
-    renderRelics();
     return;
   }
   const nextRelics = currentRelics.map(row => [...row]);
